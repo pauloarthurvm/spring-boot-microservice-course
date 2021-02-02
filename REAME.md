@@ -18,3 +18,6 @@ Controlling API Exposure:
 
 Changing default endpoint route
     - @RepositoryRestResource(collectionResourceRel = "packages", path = "packages")
+
+HAL Browser:
+    - Tool to easily navigate through the endpoint from your API
