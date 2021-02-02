@@ -7,7 +7,9 @@ import com.paulovarassin.springbootmicroservice.domain.TourPackage;
 import com.paulovarassin.springbootmicroservice.repo.TourPackageRepository;
 import com.paulovarassin.springbootmicroservice.repo.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TourService {
 
     private TourRepository tourRepository;
@@ -22,7 +24,7 @@ public class TourService {
     public Tour createTour(String title, String description, String blurb, Integer price,
                            String duration, String bullets,
                            String keywords, String tourPackageName, Difficulty difficulty, Region region) {
-        TourPackage tourPackage = tourPackageRepository.findById(tourPackageName)
+        TourPackage tourPackage = tourPackageRepository.findByName(tourPackageName)
                 .orElseThrow(() -> new RuntimeException("Tour Package does not exist: " + tourPackageName));
 
         return tourRepository.save(new Tour(title, description,blurb, price, duration,

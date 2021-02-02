@@ -3,7 +3,9 @@ package com.paulovarassin.springbootmicroservice.service;
 import com.paulovarassin.springbootmicroservice.domain.TourPackage;
 import com.paulovarassin.springbootmicroservice.repo.TourPackageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TourPackageService {
 
     private TourPackageRepository tourPackageRepository;
@@ -16,7 +18,7 @@ public class TourPackageService {
     public TourPackage createTourPackage(String code, String name) {
 
         return tourPackageRepository.findById(code)
-                .orElse(new TourPackage(code, name));
+                .orElse(tourPackageRepository.save(new TourPackage(code, name)));
     }
 
     public Iterable<TourPackage> lookup(){
