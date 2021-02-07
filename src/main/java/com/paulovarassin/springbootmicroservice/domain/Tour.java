@@ -8,7 +8,7 @@ public class Tour {
 
     @Id
     @GeneratedValue
-    private Integer Id;
+    private Integer id;
 
     @Column
     private String title;
@@ -61,7 +61,7 @@ public class Tour {
     }
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public String getTitle() {
@@ -147,7 +147,7 @@ public class Tour {
     @Override
     public String toString() {
         return "Tour{" +
-                "Id=" + Id +
+                "Id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", blurb='" + blurb + '\'' +
@@ -166,7 +166,7 @@ public class Tour {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tour tour = (Tour) o;
-        return Objects.equals(Id, tour.Id) && Objects.equals(title, tour.title) &&
+        return Objects.equals(id, tour.id) && Objects.equals(title, tour.title) &&
                 Objects.equals(description, tour.description) && Objects.equals(blurb, tour.blurb) &&
                 Objects.equals(price, tour.price) && Objects.equals(duration, tour.duration) &&
                 Objects.equals(bullets, tour.bullets) && Objects.equals(keyword, tour.keyword) &&
@@ -176,7 +176,7 @@ public class Tour {
 
     @Override
     public int hashCode() {
-        return Objects.hash(Id, title, description, blurb, price, duration,
+        return Objects.hash(id, title, description, blurb, price, duration,
                             bullets, keyword, tourPackage, difficulty, region);
     }
 }
