@@ -61,6 +61,34 @@ public class TourRatingController {
                 ratingDto.getScore(), ratingDto.getComment()));
     }
 
+    @PutMapping
+    public RatingDto updateWithPut(@PathVariable(value = "tourId") int tourId,
+                                   @RequestBody @Validated RatingDto ratingDto) {
+        TourRating tourRating = verifyTourRating(tourId, ratingDto.getCustomerId());
+        tourRating.setScore(ratingDto.getScore());
+        tourRating.setComment(ratingDto.getComment());
+        return new RatingDto(tourRatingRepository.save(tourRating));
+    }
+
+    @PatchMapping
+    public RatingDto updateWithPatch(@PathVariable(value = "tourId") int tourId,
+                                     @RequestBody @Validated RatingDto ratingDto) {
+        TourRating tourRating = verifyTourRating(tourId, ratingDto.getCustomerId());
+        if (ratingDto.getScore() != null) {
+            tourRating.setScore(ratingDto.getScore());
+        }
+        if (ratingDto.getScore() != null) {
+            tourRating.setComment(ratingDto.getComment());
+        }
+        return new RatingDto(tourRatingRepository.save(tourRating));
+    }
+
+    @DeleteMapping(path = "/{customerId}")
+    public void delete(@PathVariable(value = "tourId")int tourId,
+                       @PathVariable(value = "customerId")int customerId) {
+        TourRating tourRating = verifyTourRating(tourId, customerId);
+        tourRatingRepository.delete(tourRating);
+    }
 
     /**
      * Verify and return the Tour given a tourId.
@@ -75,6 +103,11 @@ public class TourRatingController {
                         new NoSuchElementException("Tour does not exist: " + tourId));
     }
 
+    private TourRating verifyTourRating(int tourId, int customerId) throws NoSuchElementException {
+        return tourRatingRepository.findByPkTourIdAndPkCustomerId(tourId, customerId).orElseThrow(() ->
+                new NoSuchElementException("Tour-Rating pair for request("
+                        + tourId + " for customer " + customerId + ")"));
+    }
 
     /**
      * Exception handler if NoSuchElementException is thrown in this Controller
