@@ -34,3 +34,6 @@ Why use Spring MVC?
 - API uses algorithms
 - Hide internal data
 - Require business layer
+
+Paging and Sorting DTOs
+- localhost:8080/tours/1/ratings?size=2&page=1&sort=score,desc
