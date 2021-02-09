@@ -7,6 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Deprecated
 public class RatingDto {
 
     @Min(0)
@@ -25,7 +26,7 @@ public class RatingDto {
      * @param tourRating Tour Rating Object
      */
     public RatingDto(TourRating tourRating) {
-        this(tourRating.getScore(), tourRating.getComment(), tourRating.getPk().getCustomerId());
+//        this(tourRating.getScore(), tourRating.getComment(), tourRating.getPk().getCustomerId());
     }
     /**
      * Constructor to fully initialize the RatingDto
@@ -40,7 +41,7 @@ public class RatingDto {
         this.customerId = customerId;
     }
 
-    protected RatingDto() {}
+//    protected RatingDto() {}
 
     public Integer getScore() {
         return score;

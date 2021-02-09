@@ -1,5 +1,6 @@
 package com.paulovarassin.springbootmicroservice.domain;
 
+@Deprecated
 public enum Region {
 
     Central_Coast("Central_Coast"),

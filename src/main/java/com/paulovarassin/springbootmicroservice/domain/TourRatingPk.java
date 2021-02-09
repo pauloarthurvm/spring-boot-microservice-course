@@ -1,17 +1,18 @@
 package com.paulovarassin.springbootmicroservice.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.ManyToOne;
+//import javax.persistence.Column;
+//import javax.persistence.Embeddable;
+//import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
-@Embeddable
+@Deprecated
+//@Embeddable
 public class TourRatingPk implements Serializable {
 
-    @ManyToOne
+//    @ManyToOne
     private Tour tour;
 
-    @Column(insertable = false, updatable = false, nullable = false)
+//    @Column(insertable = false, updatable = false, nullable = false)
     private Integer customerId;
 
     public TourRatingPk() {

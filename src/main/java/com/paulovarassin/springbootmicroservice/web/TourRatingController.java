@@ -34,51 +34,40 @@ public class TourRatingController {
     }
 
     @GetMapping
-    public Page<RatingDto> getAllRatingsForTour(@PathVariable(value = "tourId") int tourId, Pageable pageable) {
-        verifyTour(tourId);
-        Page<TourRating> ratings = tourRatingRepository.findByPkTourId(tourId, pageable);
-        return new PageImpl<>(
-                ratings.get().map(RatingDto::new).collect(Collectors.toList()),
-                pageable,
-                ratings.getTotalElements()
-        );
+    public Page<TourRating> getRatings(@PathVariable(value = "tourId") String tourId,
+                                       Pageable pageable){
+        return tourRatingRepository.findByTourId(tourId, pageable);
     }
 
     @GetMapping(path = "/average")
-    public Map<String, Double> getAverage(@PathVariable(value = "tourId") int tourId) {
+    public Map<String, Double> getAverage(@PathVariable(value = "tourId") String tourId) {
         verifyTour(tourId);
-        return Map.of("average", tourRatingRepository.findByPkTourId(tourId).stream()
-            .mapToInt(TourRating::getScore).average()
-            .orElseThrow(() ->
-                    new NoSuchElementException("Tour has no ratings!")));
+        return Map.of("average",tourRatingRepository.findByTourId(tourId).stream()
+                .mapToInt(TourRating::getScore).average()
+                .orElseThrow(() ->
+                        new NoSuchElementException("Tour has no Ratings")));
     }
 
-    /**
-     * Create a Tour Rating.
-     *
-     * @param tourId tour identifier
-     * @param ratingDto rating data transfer object
-     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTourRating(@PathVariable(value = "tourId") int tourId,
-                                 @RequestBody @Validated RatingDto ratingDto) {
-        Tour tour = verifyTour(tourId);
-        tourRatingRepository.save(new TourRating(new TourRatingPk(tour, ratingDto.getCustomerId()),
-                ratingDto.getScore(), ratingDto.getComment()));
+    public void createTourRating(@PathVariable(value = "tourId") String tourId,
+                                 @RequestBody @Validated TourRating tourRating) {
+        verifyTour(tourId);
+        tourRatingRepository.save(new TourRating(tourId, tourRating.getCustomerId(),
+                tourRating.getScore(), tourRating.getComment()));
     }
 
     @PutMapping
-    public RatingDto updateWithPut(@PathVariable(value = "tourId") int tourId,
-                                   @RequestBody @Validated RatingDto ratingDto) {
-        TourRating tourRating = verifyTourRating(tourId, ratingDto.getCustomerId());
-        tourRating.setScore(ratingDto.getScore());
-        tourRating.setComment(ratingDto.getComment());
-        return new RatingDto(tourRatingRepository.save(tourRating));
+    public TourRating updateWithPut(@PathVariable(value = "tourId") String tourId,
+                                    @RequestBody @Validated TourRating tourRating) {
+        TourRating rating = verifyTourRating(tourId, tourRating.getCustomerId());
+        rating.setScore(tourRating.getScore());
+        rating.setComment(tourRating.getComment());
+        return tourRatingRepository.save(rating);
     }
 
     @PatchMapping
-    public RatingDto updateWithPatch(@PathVariable(value = "tourId") int tourId,
+    public RatingDto updateWithPatch(@PathVariable(value = "tourId") String tourId,
                                      @RequestBody @Validated RatingDto ratingDto) {
         TourRating tourRating = verifyTourRating(tourId, ratingDto.getCustomerId());
         if (ratingDto.getScore() != null) {
@@ -91,7 +80,7 @@ public class TourRatingController {
     }
 
     @DeleteMapping(path = "/{customerId}")
-    public void delete(@PathVariable(value = "tourId")int tourId,
+    public void delete(@PathVariable(value = "tourId") String tourId,
                        @PathVariable(value = "customerId")int customerId) {
         TourRating tourRating = verifyTourRating(tourId, customerId);
         tourRatingRepository.delete(tourRating);
@@ -104,16 +93,16 @@ public class TourRatingController {
      * @return the found Tour
      * @throws NoSuchElementException if no Tour found.
      */
-    private Tour verifyTour(int tourId) {
+    private Tour verifyTour(String tourId) {
         return tourRepository.findById(tourId)
                 .orElseThrow(() ->
                         new NoSuchElementException("Tour does not exist: " + tourId));
     }
 
-    private TourRating verifyTourRating(int tourId, int customerId) throws NoSuchElementException {
-        return tourRatingRepository.findByPkTourIdAndPkCustomerId(tourId, customerId).orElseThrow(() ->
+    private TourRating verifyTourRating(String tourId, int customerId) throws NoSuchElementException {
+        return tourRatingRepository.findByTourIdAndCustomerId(tourId, customerId).orElseThrow(() ->
                 new NoSuchElementException("Tour-Rating pair for request("
-                        + tourId + " for customer " + customerId + ")"));
+                        + tourId + " for customer" + customerId));
     }
 
     /**
